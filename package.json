@@ -4,11 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "clean": "rm -rf node_modules && rm -rf dist/ && rm -rf juice-ws*.tgz",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuildah": "rm -rf dist/ && rm -rf juice-ws*.tgz && npm run build && npm pack",
+    "buildah": "buildah bud -t juicews .",
+    "podman": "podman run -i -p 8080:8080 --rm juicews"
   },
   "author": "",
   "license": "ISC",

@@ -10,8 +10,15 @@ app.get('/juice', (req,res) => {
   res.send(juice(juiceBody.content, juiceBody.options))
 })
 
-app.listen(8080, () => {
-  // tslint:disable-next-line:no-console
+const server = app.listen(8080, () => {
   console.log('Listening...')
 })
+
+process.on('SIGINT', () => {
+  console.debug('SIGINT signal received: closing HTTP server')
+  server.close(() => {
+    console.debug('HTTP server closed')
+  })
+})
+
 

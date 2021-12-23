@@ -15,12 +15,14 @@ curl --location --request GET 'http://localhost:8080/juice' \
 ## Build container
 
 ```
-buildah bud --volume $PWD:/data -t juicews .
+dnf install -y buildah
+npm run buildah
 ```
 
 
 ## Run container
 
 ```
-podman run --rm juicews
+dnf install -y podman
+npm run podman
 ```

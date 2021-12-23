@@ -1,5 +1,7 @@
 FROM docker.io/node:17-alpine3.14
 
-RUN npm pack /data/ && npm install -g juice-ws*.tgz
+COPY juice-ws*.tgz /data/
+
+RUN npm install -g /data/juice-ws*.tgz
 
 CMD juice-ws
