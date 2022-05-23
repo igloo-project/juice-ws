@@ -6,7 +6,7 @@ Expose juice (CSS inliner) as a web service.
 ## Curl usage
 
 ```
-curl --location --request GET 'http://localhost:8080/juice' \
+curl --location --request GET 'http://localhost:8000/juice' \
 --header 'Content-Type: application/json' \
 --data-raw '{"content": "<style>div{color:red;}</style><div/>", "options": {"extraCss": "div {background-color: black;}"}}'
 ```
