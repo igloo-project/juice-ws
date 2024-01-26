@@ -9,6 +9,7 @@ build:
     - /usr/bin/bash
   stage: build
   script:
+  - npm run build
   - npm pack
   - apk add jq
   - cat package.json | jq -r '.version' > version.txt
