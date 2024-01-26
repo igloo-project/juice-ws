@@ -26,3 +26,19 @@ npm run buildah
 dnf install -y podman
 npm run podman
 ```
+
+## Release
+
+```
+npm version NEW_VERSION --no-git-tag-version
+git add -A
+git commit
+git tag vNEW_VERSION
+git push origin main vNEW_VERSION
+```
+
+## Changelog
+
+### v0.1.0 - 2024-01-26
+
+Initial release.
