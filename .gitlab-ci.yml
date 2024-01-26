@@ -1,0 +1,35 @@
+stages:
+- build
+- container
+
+build:
+  image: 
+    name: docker.io/node:17-alpine3.14
+    entrypoint: sh
+  stage: build
+  script:
+  - npm pack
+  - apk add jq
+  - cat package.json | jq -r '.version' > version.txt
+  tags:
+  - docker
+  artifacts:
+    expire_in: 1h
+    paths:
+    - juice-ws-*.tgz
+    - version.txt
+
+container:
+  image: igloo-containers.tools.kobalt.fr/containers/buildah:latest
+  stage: container
+  dependencies:
+  - build
+  script:
+  - IMAGE_NAME="igloo-containers.tools.kobalt.fr/containers/juice-ws:$( cat version.txt )"
+  - buildah build -t "$IMAGE_NAME" .
+  - 'buildah login -u "$CONTAINER_USERNAME" -p "$CONTAINER_PASSWORD" igloo-containers.tools.kobalt.fr'
+  - 'buildah push "$IMAGE_NAME" "docker://$IMAGE_NAME"'
+  tags:
+  - buildah
+  only:
+  - tags
