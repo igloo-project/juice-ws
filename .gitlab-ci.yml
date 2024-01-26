@@ -8,6 +8,7 @@ build:
     entrypoint: [""]
   stage: build
   script:
+  - npm install --dev
   - npm run build
   - npm pack
   - apk add jq
