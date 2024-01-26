@@ -6,7 +6,7 @@ build:
   image: 
     name: docker.io/node:17-alpine3.14
     entrypoint:
-    - sh
+    - /bin/sh
   stage: build
   script:
   - npm pack
