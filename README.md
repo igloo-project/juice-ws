@@ -6,7 +6,7 @@ Expose juice (CSS inliner) as a web service.
 ## Curl usage
 
 ```
-curl --location --request GET 'http://localhost:8000/juice' \
+curl --location --request GET 'http://localhost:8000/api/v1/inline' \
 --header 'Content-Type: application/json' \
 --data-raw '{"content": "<style>div{color:red;}</style><div/>", "options": {"extraCss": "div {background-color: black;}"}}'
 ```
@@ -38,6 +38,12 @@ git push origin main vNEW_VERSION
 ```
 
 ## Changelog
+
+### v0.2.0 - 2024-01-26
+
+* YAML configuration
+* authentication and anonymous support
+* ping API
 
 ### v0.1.0 - 2024-01-26
 

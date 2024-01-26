@@ -1,0 +1,10 @@
+server:
+  port:
+authentication:
+  anonymous: false
+  bearer:
+    users:
+    - username: x
+      token: XXX
+    - username: y
+      token: YYY

@@ -4,4 +4,4 @@ COPY juice-ws*.tgz /data/
 
 RUN npm install -g /data/juice-ws*.tgz
 
-CMD juice-ws
+ENTRYPOINT juice-ws server
