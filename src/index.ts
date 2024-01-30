@@ -52,7 +52,7 @@ function initializeApp(config: Config) {
   app.use(express.json())
 
   const auths: Record<string, BearerAuth> = {}
-  for (let auth of config.authentication.bearer.users) {
+  for (const auth of config.authentication.bearer.users) {
     auths[auth.token] = auth
   }
 
@@ -60,7 +60,7 @@ function initializeApp(config: Config) {
   const passport = require("passport")
   passport.use("bearer", new BearerStrategy((token, done) => {
     if (auths[token] !== undefined) {
-      const user = { username: auths[token], token: token }
+      const user = { username: auths[token], token }
       console.debug("Authentication: user=%s", auths[token].username)
       return done(null, user)
     } else {
@@ -128,7 +128,7 @@ function parseConfig(argv: any) {
     config.authentication.bearer = {} as BearerConfig
   }
   if (config.authentication.bearer.users === undefined) {
-    config.authentication.bearer.users = [] as Array<BearerAuth>
+    config.authentication.bearer.users = [] as BearerAuth[]
   }
   // override from command-line
   if (argv.port) {

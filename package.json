@@ -8,7 +8,7 @@
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node .",
+    "start": "node . server -p 8000",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuildah": "rm -rf dist/ && rm -rf juice-ws*.tgz && npm run build && npm pack",
     "buildah": "buildah bud -t juicews .",
