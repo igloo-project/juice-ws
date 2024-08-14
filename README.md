@@ -39,6 +39,11 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### v0.4.0 - 2024-08-14
+
+* fix container: node version update needed
+* container: node 17 -> 20
+
 ### v0.3.0 - 2024-08-14
 
 * express version update

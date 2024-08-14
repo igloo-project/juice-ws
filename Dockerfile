@@ -1,4 +1,4 @@
-FROM docker.io/node:17-alpine3.14
+FROM docker.io/node:20-alpine3.20
 
 COPY juice-ws*.tgz /data/
 

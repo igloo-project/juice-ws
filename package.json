@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuildah": "rm -rf dist/ && rm -rf juice-ws*.tgz && npm run build && npm pack",
     "buildah": "buildah bud -t juicews .",
-    "podman": "podman run -i -p 8000:8080 --rm juicews"
+    "podman": "podman run -i -p 8000:8000 -v ./config.yaml:/config.yaml --rm juicews"
   },
   "author": "",
   "license": "ISC",
