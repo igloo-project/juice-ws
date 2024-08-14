@@ -39,6 +39,11 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### v0.3.0 - 2024-08-14
+
+* express version update
+* typescript version update
+
 ### v0.2.0 - 2024-01-26
 
 * YAML configuration
