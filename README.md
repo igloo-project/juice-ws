@@ -39,6 +39,11 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### v0.5.0 - 2024-08-20
+
+* juice 10.0.1
+* workaround cheerio bug https://github.com/cheeriojs/cheerio/issues/4034
+
 ### v0.4.0 - 2024-08-14
 
 * fix container: node version update needed
