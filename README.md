@@ -42,6 +42,7 @@ git push origin main vNEW_VERSION
 ### TBD
 
 * pin all dependencies version
+* add package-lock.json
 
 ### v0.5.0 - 2024-08-20
 
