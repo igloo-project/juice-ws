@@ -39,6 +39,10 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### TBD
+
+* pin all dependencies version
+
 ### v0.5.0 - 2024-08-20
 
 * juice 10.0.1
