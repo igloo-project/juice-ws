@@ -39,10 +39,11 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
-### TBD
+### v0.6.0 - 2024-08-23
 
 * pin all dependencies version
 * add package-lock.json
+* juice 11.0.0 (fix https://github.com/cheeriojs/cheerio/issues/4034)
 
 ### v0.5.0 - 2024-08-20
 
