@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "juice-ws",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -18,7 +18,8 @@
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
-            ]
+            ],
+            "outputCapture": "std"
         }
     ]
 }

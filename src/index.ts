@@ -7,9 +7,22 @@ import { JuiceBody } from "./juicews";
 import { parse } from "yaml";
 import yargs from "yargs";
 import { hideBin } from 'yargs/helpers';
+import pino from "pino";
+import PinoHttp from "pino-http";
+import { IncomingMessage } from "http";
+import { ServerResponse } from "http";
+
+const logger = pino({
+  transport: {
+    target: "pino-pretty",
+    options: {
+      translateTime: "SYS:standard"
+    }
+  },
+})
 
 // command line parsing
-yargs.scriptName("juice-ws")
+yargs("juice-ws")
   .usage("$0 <cmd> [args]")
   .command("server", "Launch juice server", (yargsOptions) => {
     yargsOptions
@@ -51,6 +64,32 @@ function initializeApp(config: Config) {
   const app = express();
   app.use(express.json())
 
+  // logging
+  const loggerHttp = pino({
+    transport: {
+      target: "pino-pretty",
+      options: {
+        hideObject: true,
+        messageFormat: "{req.remoteAddress} - {authInfo.username} \"{req.method} {req.url} HTTP/{httpVersion}\" {res.statusCode} {res.headers.content-length} \"{req.headers.referer}\" \"{req.headers.user-agent}\"",
+        translateTime: "SYS:standard"
+      }
+    },
+  })
+  const pinoHttp = PinoHttp({
+    logger: loggerHttp,
+    customProps: (req: any, res: any) => {
+      const extra: any = {}
+      extra.httpVersion = req.httpVersion
+      if (req.authInfo) {
+        extra.authInfo = req.authInfo;
+      } else {
+        extra.authInfo = { username: "anonymous" };
+      }
+      return extra;
+    }
+  })
+  app.use(pinoHttp)
+
   const auths: Record<string, BearerAuth> = {}
   for (const auth of config.authentication.bearer.users) {
     auths[auth.token] = auth
@@ -60,10 +99,11 @@ function initializeApp(config: Config) {
   const passport = require("passport")
   passport.use("bearer", new BearerStrategy((token, done) => {
     if (auths[token] !== undefined) {
-      const user = { username: auths[token], token }
-      console.debug("Authentication: user=%s", auths[token].username)
-      return done(null, user)
+      const user: any = { username: auths[token].username, token }
+      logger.debug("Authentication: user=%s", auths[token].username)
+      return done(null, user, user)
     } else {
+      const anonymous: any = { username: "anonymous" }
       return done(null, false)
     }
   }))
@@ -77,7 +117,7 @@ function initializeApp(config: Config) {
     optionalAuthentication : mandatoryAuthentication
 
   app.get('/api/v1/ping', optionalAuthentication, (req, res) => {
-    console.log(req.user)
+    logger.info(req.user)
     const response = {
       "message": "pong",
       "authenticated": req.user !== undefined
@@ -85,7 +125,7 @@ function initializeApp(config: Config) {
     res.send(response)
   })
 
-  app.get('/api/v1/inline', serviceAuthentication, (req,res) => {
+  app.get('/api/v1/inline', serviceAuthentication, (req, res) => {
     const juiceBody = req.body as JuiceBody;
     res.send(juice(juiceBody.content, juiceBody.options))
   })
@@ -97,13 +137,13 @@ function runServer(argv: any) {
   const config = parseConfig(argv)
   const app = initializeApp(config)
   const server = app.listen(config.server.port, () => {
-    console.log('Listening...')
+    logger.info('Listening...')
   })
 
   process.on('SIGINT', () => {
-    console.debug('SIGINT signal received: closing HTTP server')
+    logger.debug('SIGINT signal received: closing HTTP server')
     server.close(() => {
-      console.debug('HTTP server closed')
+      logger.debug('HTTP server closed')
     })
   })
 }
