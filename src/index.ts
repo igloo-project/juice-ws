@@ -7,6 +7,17 @@ import { JuiceBody } from "./juicews";
 import { parse } from "yaml";
 import yargs from "yargs";
 import { hideBin } from 'yargs/helpers';
+import pino from "pino";
+
+const logger = pino({
+ transport: {
+   target: 'pino-pretty',
+   options: {
+    translateTime: 'SYS:standard',
+    hideObject: true
+   }
+ },
+})
 
 // command line parsing
 yargs.scriptName("juice-ws")
@@ -51,6 +62,28 @@ function initializeApp(config: Config) {
   const app = express();
   app.use(express.json())
 
+  const loggerHttp = pino({})
+  const pinoHttp = require('pino-http')(
+    {
+      serializers: {
+        req: (req:any) => req
+      },
+      customProps: (req:any) => ({ user: req.authInfo ? req.authInfo.username : '' }),
+      transport: {
+        target: 'pino-toke',
+        options: {
+          destination: 1, // optional (default stdout)
+          ancillary: 2, // optional
+          // format: '[:date[clf]] :remote-addr - :user - :remote-user  ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', // required
+          format: (tokens:any, o:any) => { return o.user; },
+          keep: false // optional
+        }
+      }
+    }
+  )
+
+  app.use(pinoHttp);
+
   const auths: Record<string, BearerAuth> = {}
   for (const auth of config.authentication.bearer.users) {
     auths[auth.token] = auth
@@ -60,9 +93,9 @@ function initializeApp(config: Config) {
   const passport = require("passport")
   passport.use("bearer", new BearerStrategy((token, done) => {
     if (auths[token] !== undefined) {
-      const user = { username: auths[token], token }
-      console.debug("Authentication: user=%s", auths[token].username)
-      return done(null, user)
+      const user:any = { username: auths[token].username, token }
+      logger.info("Authentication: user=%s", auths[token].username)
+      return done(null, user, user)
     } else {
       return done(null, false)
     }
@@ -70,14 +103,13 @@ function initializeApp(config: Config) {
   passport.use("anonymous", new AnonymousStrategy())
 
   // auth pipelines
-  const optionalAuthentication = passport.authenticate(["bearer", "anonymous"], { session: false })
-  const mandatoryAuthentication = passport.authenticate(["bearer"], { session: false })
+  const optionalAuthentication = passport.authenticate(["bearer", "anonymous"], { session: false, authInfo: true })
+  const mandatoryAuthentication = passport.authenticate(["bearer"], { session: false, authInfo: true })
 
   const serviceAuthentication = config.authentication.anonymous ?
     optionalAuthentication : mandatoryAuthentication
 
   app.get('/api/v1/ping', optionalAuthentication, (req, res) => {
-    console.log(req.user)
     const response = {
       "message": "pong",
       "authenticated": req.user !== undefined
@@ -97,13 +129,13 @@ function runServer(argv: any) {
   const config = parseConfig(argv)
   const app = initializeApp(config)
   const server = app.listen(config.server.port, () => {
-    console.log('Listening...')
+    logger.error('Listening...')
   })
 
   process.on('SIGINT', () => {
-    console.debug('SIGINT signal received: closing HTTP server')
+    logger.debug('SIGINT signal received: closing HTTP server')
     server.close(() => {
-      console.debug('HTTP server closed')
+      logger.debug('HTTP server closed')
     })
   })
 }
