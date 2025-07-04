@@ -117,7 +117,6 @@ function initializeApp(config: Config) {
     optionalAuthentication : mandatoryAuthentication
 
   app.get('/api/v1/ping', optionalAuthentication, (req, res) => {
-    logger.info(req.user)
     const response = {
       "message": "pong",
       "authenticated": req.user !== undefined
