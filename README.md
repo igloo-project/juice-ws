@@ -39,6 +39,15 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### v0.7.0 - 2025-07-04
+
+* express version update (4.19.2 -> 5.1.0)
+* juice version update (11.0.0 -> 11.0.1)
+* yaml version update (2.5.0 -> 2.8.0)
+* yargs version update (17.7.2 -> 18.0.0)
+* typescript version update (5.5.4 -> 5.8.3)
+* update and clean logging
+
 ### v0.6.0 - 2024-08-23
 
 * pin all dependencies version
