@@ -39,6 +39,16 @@ git push origin main vNEW_VERSION
 
 ## Changelog
 
+### v0.8.0 - 2025-10-03
+
+* juice version update (11.0.1 -> 11.0.3)
+* pino version update (9.7.0 -> 9.13.0)
+* pino-pretty version update (13.0.0 -> 13.1.1)
+* yaml version update (2.8.0 -> 2.8.1)
+* typescript version update (5.8.3 -> 5.9.3)
+* @types/passport-http-bearer version update (1.0.41 -> 1.0.42)
+* @types/node version update (24.0.10 -> 24.6.2)
+
 ### v0.7.0 - 2025-07-04
 
 * express version update (4.19.2 -> 5.1.0)
